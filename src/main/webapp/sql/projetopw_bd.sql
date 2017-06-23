@@ -15,7 +15,6 @@ create table usuarios(
 insert into usuarios (usuario, senha) values ('jones', '123');
 
 
-
 /* Exemplo de criação de tabela */
 /*
 CREATE TABLE teste ( 
