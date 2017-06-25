@@ -11,6 +11,8 @@ import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 
+import br.com.labpw.model.Usuario;
+
 @WebFilter("*.html")
 public class FiltroLogin implements Filter {
 	
@@ -21,15 +23,12 @@ public class FiltroLogin implements Filter {
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
 			throws IOException, ServletException {
 		
-		Boolean isLogado = (Boolean)((HttpServletRequest) request).getSession().getAttribute("logado");
+		Usuario usuario = (Usuario)((HttpServletRequest) request).getSession().getAttribute("usuario");
 		
-		if(isLogado != null){
-			if(isLogado){
-				request.getRequestDispatcher("/home.jsp").forward(request, response);
-			}else {
-				chain.doFilter(request, response);
-			}
-		}else {
+		if(usuario != null){
+			request.getRequestDispatcher("/home.jsp").forward(request, response);
+		}else{
+			request.getRequestDispatcher("servletlogout").forward(request, response);
 			chain.doFilter(request, response);
 		}
 	}

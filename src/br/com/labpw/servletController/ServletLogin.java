@@ -27,7 +27,6 @@ public class ServletLogin extends HttpServlet {
 		
 		if((usuarioStr == null || senhaStr == null) || (usuarioStr.isEmpty() || senhaStr.isEmpty())){
 			request.getRequestDispatcher("/index.html").forward(request, response);
-			request.setAttribute("menssagem", "Informar login e senha!!");
 			//response.sendRedirect("index.jsp");
 		}else{
 			// Recupera uma conexão com o banco			
@@ -40,18 +39,17 @@ public class ServletLogin extends HttpServlet {
 			
 			//Instancia um UsuarioDao e executa o método de autenticar
 			UsuarioDao dao = new UsuarioDao(connection);
-			if(dao.autenticar(usuario)){
+			Usuario usuarioAutenticado = dao.autenticar(usuario);
+			if(usuarioAutenticado != null){
 				HttpSession sessao = request.getSession();
-				sessao.setAttribute("usuario", usuario);
-				sessao.setAttribute("logado", true);
-				sessao.setMaxInactiveInterval(1*60);
+				sessao.setAttribute("usuario", usuarioAutenticado);
+				sessao.setMaxInactiveInterval(2*60);
 				request.getRequestDispatcher("/home.jsp").forward(request, response);
 				
 			}else{
 				///////////////
 				HttpSession sessao = request.getSession();
-				sessao.setAttribute("logado", false);
-				sessao.setMaxInactiveInterval(300);
+				sessao.setAttribute("usuario", usuarioAutenticado);
 				/////////////
 				request.setAttribute("menssagem", "Usuário e/ou senha inválidos!!!");
 				request.getRequestDispatcher("/erroPage.jsp").forward(request, response);;
